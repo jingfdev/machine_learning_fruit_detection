@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This project is a machine learning application that uses deep learning to classify fruits and vegetables from images. The system employs a Convolutional Neural Network (CNN) built with TensorFlow/Keras to recognize 36 different types of fruits and vegetables. The project includes both training notebooks for model development and a Streamlit web application for real-time prediction. 
+This is a machine learning project that uses deep learning to classify fruits and vegetables from images. The system employs a Convolutional Neural Network (CNN) built with TensorFlow/Keras to recognize 36 different types of fruits and vegetables. This project demonstrates the complete machine learning workflow including data preprocessing, model architecture design, training, and evaluation.
 
 ### Supported Classes
 The model can recognize the following 36 fruits and vegetables:
@@ -25,8 +25,6 @@ numpy==1.24.3
 matplotlib==3.7.2
 seaborn==0.13.0
 pandas==2.1.0
-streamlit
-librosa==0.10.1
 kagglehub
 ```
 
@@ -57,52 +55,36 @@ cd "Fruits and Vegetable Recognition"
 pip install -r requirement.txt
 ```
 
-### Step 4: Download Dataset (For Training)
-If you want to train the model from scratch:
-
-1. Run the training notebook `Training_fruit_vegetable.ipynb`
-2. The dataset will be automatically downloaded using kagglehub
-3. The notebook will handle data preprocessing and model training
-
-### Step 5: Model Training (Optional)
-If you want to train your own model:
+### Step 4: Download Dataset
+The dataset will be automatically downloaded when you run the training notebook:
 
 1. Open `Training_fruit_vegetable.ipynb` in Jupyter Notebook or VS Code
-2. Run all cells sequentially
-3. The trained model will be saved as `trained_model.h5`
-4. Training history will be saved as `training_hist.json`
+2. The first cell uses kagglehub to download the dataset
+3. The dataset path will be stored automatically
 
-### Step 6: Testing the Model (Optional)
-To test the trained model:
+### Step 5: Model Training
+To train the model:
+
+1. Open `Training_fruit_vegetable.ipynb` in Jupyter Notebook or VS Code
+2. Run all cells sequentially from top to bottom
+3. The notebook will:
+   - Download and load the dataset
+   - Preprocess training and validation images
+   - Build the CNN architecture
+   - Train the model with the training data
+   - Save the trained model as `trained_model.h5`
+   - Save training history as `training_hist.json`
+
+### Step 6: Model Evaluation and Testing
+To evaluate the trained model:
 
 1. Open `Testing_fruit_veg_recognition.ipynb`
-2. Run the cells to evaluate model performance
-3. View accuracy metrics and prediction results
-
-### Step 7: Run the Web Application
-```cmd
-# Navigate to the webapp directory
-cd Fruit_veg_webapp
-
-# Run the Streamlit application
-streamlit run main.py
-```
-
-The web application will open in your default browser at `http://localhost:8501`
-
-## How to Use the Web Application
-
-### Home Page
-- Displays the main interface with project title and overview image
-
-### About Project
-- Contains information about the dataset and project details
-- Lists all supported fruit and vegetable classes
-
-### Prediction Page
-- Upload an image of a fruit or vegetable
-- Click "Predict" to get the classification result
-- View the predicted class with confidence
+2. Run all cells to:
+   - Load the trained model
+   - Evaluate performance on test data
+   - View accuracy metrics and confusion matrix
+   - Test predictions on sample images
+   - Analyze model performance
 
 ## Project Structure
 
@@ -111,30 +93,91 @@ Fruits and Vegetable Recognition/
 ├── README.md                           # Project documentation
 ├── requirement.txt                     # Python dependencies
 ├── Training_fruit_vegetable.ipynb      # Model training notebook
-├── Testing_fruit_veg_recognition.ipynb # Model testing notebook
-├── trained_model.h5                    # Pre-trained model file
-├── training_hist.json                  # Training history
-├── Fruit_veg_webapp/                   # Web application
-│   ├── main.py                         # Streamlit app main file
-│   ├── labels.txt                      # Class labels
-│   ├── home_img.jpg                    # Home page image
-│   └── Download_image/                 # Sample test images
-│       ├── Image_1.jpg
-│       ├── Image_2.jpg
-│       └── ...
+├── Testing_fruit_veg_recognition.ipynb # Model evaluation notebook
+├── trained_model.h5                    # Trained model file
+└── training_hist.json                  # Training history and metrics
 ```
 
 ## Model Architecture
 
-The CNN model includes:
-- Convolutional layers for feature extraction
-- MaxPooling layers for dimensionality reduction
-- Dropout layers for regularization
-- Dense layers for classification
-- Softmax activation for multi-class prediction
+The CNN model is built with the following layers:
+- **Convolutional layers** - Extract features from images
+- **MaxPooling layers** - Reduce spatial dimensions
+- **Dropout layers** - Prevent overfitting
+- **Flatten layer** - Convert 2D features to 1D
+- **Dense layers** - Fully connected layers for classification
+- **Output layer** - 36 units with softmax activation
 
-**Input Shape**: 64x64x3 (RGB images)
-**Output**: 36 classes (fruits and vegetables)
+**Model Specifications:**
+- **Input Shape**: 64x64x3 (RGB images)
+- **Output**: 36 classes (multi-class classification)
+- **Loss Function**: Categorical Crossentropy
+- **Optimizer**: Adam
+- **Metrics**: Accuracy
+
+## Training Results
+
+The model is trained on the Kaggle Fruit and Vegetable Image Recognition dataset with:
+- Image preprocessing and normalization
+- Batch size: 32
+- Image size: 64x64 pixels
+- Training and validation split
+
+Results and performance metrics can be viewed in the `Testing_fruit_veg_recognition.ipynb` notebook.
+
+## Key Features
+
+- **Automated Dataset Download** - Uses kagglehub for seamless dataset acquisition
+- **Data Preprocessing** - Handles image loading, resizing, and normalization
+- **CNN Architecture** - Custom-built convolutional neural network
+- **Training Visualization** - Plots training/validation accuracy and loss
+- **Model Evaluation** - Comprehensive testing with metrics and predictions
+- **Model Persistence** - Saves trained model for future use
+
+## Troubleshooting
+
+### Common Issues
+
+1. **ValueError: Shapes incompatible**
+   - Ensure the output layer has the correct number of units (36 for this dataset)
+   - Verify that `label_mode="categorical"` is set in data loading
+
+2. **Module not found errors**
+   - Make sure all dependencies are installed: `pip install -r requirement.txt`
+   - Verify you're using the correct Python environment
+
+3. **Dataset download issues**
+   - Check your internet connection
+   - Ensure kagglehub is properly installed
+   - Verify Kaggle API credentials if required
+
+4. **Out of memory errors**
+   - Reduce batch size in the training notebook
+   - Close other applications to free up RAM
+   - Consider using a machine with more memory
+
+### Performance Tips
+
+- **Use GPU acceleration** - Install GPU-enabled TensorFlow for faster training
+- **Adjust batch size** - Increase if you have sufficient memory
+- **Monitor training** - Watch for overfitting in training/validation curves
+- **Save checkpoints** - Save model at regular intervals during long training sessions
+
+## Future Improvements
+
+Potential enhancements for this project:
+- Implement data augmentation (rotation, flipping, zooming) for better generalization
+- Experiment with transfer learning using pre-trained models (VGG16, ResNet, etc.)
+- Add more fruit/vegetable classes to expand recognition capabilities
+- Implement early stopping and learning rate scheduling
+- Cross-validation for more robust model evaluation
+- Deploy the model as a web service or mobile application
+
+## Dataset Credit
+
+This project uses the **Fruit and Vegetable Image Recognition** dataset from Kaggle:
+- **Source**: [Kaggle - Fruit and Vegetable Image Recognition](https://www.kaggle.com/datasets/kritikseth/fruit-and-vegetable-image-recognition)
+- **Creator**: Kritik Seth
 
 ## License
 
